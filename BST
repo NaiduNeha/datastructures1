@@ -1,0 +1,155 @@
+#include<stdio.h>
+#include <stdlib.h>
+struct bst
+{
+        int data;
+        struct bst *left,*right;
+};
+typedef struct bst node;
+node *insert(node *p,int x)
+{
+        node *new;
+        if(p==NULL)
+        {
+                new=(node *)malloc(sizeof(node));
+                new->data=x;
+                new->left=new->right=NULL;
+                p=new;
+        }
+        else if(x<=p->data)
+        {
+                p->left=insert(p->left,x);
+        }
+        else
+        {
+                p->right=insert(p->right,x);
+        }
+        return p;
+}
+void inorder(node *p)
+{
+    if(p!=NULL)
+    {
+        inorder(p->left);
+        printf("%d\t",p->data);
+        inorder(p->right);
+    }
+}
+void preorder(node *p)
+{
+    if(p!=NULL)
+    {
+        printf("%d\t",p->data);
+        preorder(p->left);
+        preorder(p->right);
+    }
+}
+void postorder(node *p)
+{
+    if(p!=NULL)
+    {
+        postorder(p->left);
+        postorder(p->right);
+        printf("%d\t",p->data);
+    }
+}
+node *findmin(node *p)
+{
+    if(p!=NULL)
+    while(p->left!=NULL)
+    {
+        p=p->left;
+    }
+    return p;
+}
+node *findmax(node *p)
+{
+    if(p!=NULL)
+    while(p->right!=NULL)
+    {
+        p=p->right;
+    }
+    return p;
+}
+
+
+node *search(node *p,int x)
+{
+    if(p==NULL)
+    {
+     return p;
+    }
+    else if(x<p->data)
+    {
+        return (search(p->left,x));
+    }
+    else if(x>p->data)
+    {
+        return (search(p->right,x));
+    }
+    else
+    {
+        return p;
+    }
+}
+int main()
+{
+    int ch,x;
+    node *root=NULL,*temp;
+    while(1)
+    {
+        printf("\n1.insert \n2.inorder \n3.preorder \n4.postorder \n5.findmin \n6.findmax \n7.search \n8.exit");
+        printf("\nenter your choice");
+        scanf("%d",&ch);
+        switch(ch)
+        {
+            case 1:printf("enter element to insert in tree:");
+                   scanf("%d",&x);
+                   root=insert(root,x);
+                   break;
+            case 2:printf("the inorder of bst is");
+                   inorder(root);
+                   break;
+            case 3:printf("the preorder of bst is");
+                   preorder(root);
+                   break;
+            case 4:printf("the postorder of bst is");
+                   postorder(root);
+                   break;
+            case 5:temp=findmin(root);
+                   if(temp==NULL)
+                   {
+                       printf("no bst to print");
+                   }
+                   else
+                   {
+                       printf("the minimum value of bst %d",temp->data);
+                   }
+                   break;
+            case 6:temp=findmax(root);
+                   if(temp==NULL)
+                   {
+                       printf("no bst to print");
+                   }
+                   else
+                   {
+                       printf("the maximum value of bst %d",temp->data);
+                   }
+                   break;
+            case 7:printf("enter element to search");
+                   scanf("%d",&x);
+                   temp=search(root,x);
+                   if(temp==NULL)
+                   {
+                       printf("no element is found");
+                   }
+                   else
+                   {
+                       printf("element is found %d",temp->data);
+                   }
+                   break;
+           }
+      }
+  }
+  
+                   
