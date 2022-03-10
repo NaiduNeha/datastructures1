@@ -1,0 +1,153 @@
+#include <stdio.h>
+#include <stdlib.h>
+struct AVL
+{
+int data,ht;
+struct AVL *left,*right;
+};
+typedef struct AVL node;
+int max(int,int);
+int height(node*);
+
+node* single_ll(node *k2)
+{
+node* k1=k2->left;
+k2->left=k1->right;
+k1->right=k2;
+k2->ht=max(height(k2->left),height(k2->right))+1;
+k1->ht=max(height(k1->left),height(k1->right))+1;
+return k1;
+}
+node* single_rr(node *k1)
+{
+node* k2=k1->right;
+k1->right=k2->left;
+k2->left=k1;
+k2->ht=(max(height(k2->left),height(k2->right)))+1;
+k1->ht=(max(height(k1->left),height(k1->right)))+1;
+return k2;
+}
+node* double_lr(node *k3)
+{
+k3->left=single_rr(k3->left);
+return single_ll(k3);
+}
+node *double_rl(node *k1)
+{
+k1->right=single_ll(k1->right);
+return single_rr(k1);
+}
+int height(node *p)
+{
+if(p==NULL)
+{
+return -1;
+}
+else
+{
+return (max(height(p->left),height(p->right))+1);
+}
+}
+int max(int a,int b)
+{
+return a>b?a:b;
+}
+node* insert(node *p,int x)
+{
+if(p==NULL)
+{
+p=(node*)malloc(sizeof(node));
+p->data=x;
+p->left=NULL;
+p->right=NULL;
+p->ht=0;
+}
+else if(x<p->data)
+{
+p->left=insert(p->left,x);
+if(abs(height(p->left)-height(p->right))==2)
+{
+if(x<p->left->data)
+{
+p=single_ll(p);
+}
+else
+{
+p=double_lr(p);
+}
+}
+}
+else if(x>p->data)
+{
+p->right=insert(p->right,x);
+if(abs(height(p->left)-height(p->right))==2)
+{
+if(x>p->right->data)
+{
+p=single_rr(p);
+}
+else
+{
+p=double_rl(p);
+}
+}
+}
+p->ht=max(height(p->left),height(p->right))+1;
+return p;
+}
+void inorder(node *p)
+{
+if(p!=NULL)
+{
+inorder(p->left);
+printf("%d\t",p->data);
+inorder(p->right);
+}
+}
+void preorder(node *p)
+{
+if(p!=NULL)
+{
+printf("%d\t",p->data);
+preorder(p->left);
+preorder(p->right);
+}
+}
+void postorder(node *p)
+{
+if(p!=NULL)
+{
+postorder(p->left);
+postorder(p->right);
+printf("%d\t",p->data);
+}
+}
+int main()
+{
+int choice,x;
+node *root=NULL;
+while(1)
+{
+printf("\n1.insertion\n2.inorder\n3.preorder\n4.postorder\n5.exit\n");
+printf("Enter your choice: ");
+scanf("%d",&choice);
+switch(choice)
+{
+case 1:printf("Enter the element to insert: ");
+       scanf("%d",&x);
+       root=insert(root,x);
+       break;
+case 2:printf("Inorder traversal is:\n");
+       inorder(root);
+       break;
+case 3:printf("preorder traversal is:\n");
+       preorder(root);
+       break;
+case 4:printf("post order traversal is:\n");
+       postorder(root);
+       break;
+case 5:exit(0);
+       break;
+}
+}
+}
